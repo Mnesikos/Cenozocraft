@@ -1,0 +1,16 @@
+[
+{
+  "modid": "cenozocraft",
+  "name": "Cenozocraft",
+  "description": "placeholder description",
+  "version": "1.0.0",
+  "mcversion": "${mcversion}",
+  "url": "http://minecraft.curseforge.com/projects/cenozocraft",
+  "updateUrl": "",
+  "authorList": ["Jaz"],
+  "credits": "placeholder credits",
+  "logoFile": "logo.png",
+  "screenshots": [],
+  "dependencies": []
+}
+]
