@@ -5,7 +5,11 @@ import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.opengl.GL11;
+import rando.cenozocraft.common.entity.monster.EntityIrishElk;
+import rando.cenozocraft.common.entity.passive.EntityHouseMouse;
+import rando.cenozocraft.common.util.CenozocraftUtils;
 
+@SuppressWarnings("WeakerAccess")
 public class ModelHouseMouse extends ModelBase {
     public ModelRenderer Body;
     public ModelRenderer Hips;
@@ -239,15 +243,8 @@ public class ModelHouseMouse extends ModelBase {
     }
 
     @Override
-    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) { 
-        GlStateManager.pushMatrix();
-        GlStateManager.translate(this.Body.offsetX, this.Body.offsetY, this.Body.offsetZ);
-        GlStateManager.translate(this.Body.rotationPointX * f5, this.Body.rotationPointY * f5, this.Body.rotationPointZ * f5);
-        GlStateManager.scale(0.2D, 0.2D, 0.2D);
-        GlStateManager.translate(-this.Body.offsetX, -this.Body.offsetY, -this.Body.offsetZ);
-        GlStateManager.translate(-this.Body.rotationPointX * f5, -this.Body.rotationPointY * f5, -this.Body.rotationPointZ * f5);
-        this.Body.render(f5);
-        GlStateManager.popMatrix();
+    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
+        CenozocraftUtils.simpleRender(Body, f5, 0.2);
     }
 
     public void setRotateAngle(ModelRenderer modelRenderer, float x, float y, float z) {

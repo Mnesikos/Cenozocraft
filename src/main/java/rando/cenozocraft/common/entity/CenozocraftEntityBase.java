@@ -1,138 +1,198 @@
 package rando.cenozocraft.common.entity;
 
 import com.google.common.collect.Lists;
-import net.minecraft.entity.EntityCreature;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.IResource;
+import net.minecraft.entity.EntityAgeable;
+import net.minecraft.entity.EntityList;
+import net.minecraft.entity.IEntityLivingData;
+import net.minecraft.entity.ai.EntityAIFollowOwner;
+import net.minecraft.entity.ai.EntityAILookIdle;
+import net.minecraft.entity.ai.EntityAISit;
 import net.minecraft.entity.ai.EntityAIWander;
+import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
-import rando.cenozocraft.common.datasync.CenozocraftDataSerializers;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import rando.cenozocraft.common.entity.monster.CenozocraftMonsterBase;
+import rando.cenozocraft.common.main.CenozocraftMain;
+import rando.cenozocraft.common.util.CenozocraftReference;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URL;
+import java.nio.file.*;
+import java.util.*;
 
-public abstract class CenozocraftEntityBase extends EntityCreature {
+public abstract class CenozocraftEntityBase extends EntityTameable {
 
-    private static final DataParameter<Integer> MODE = EntityDataManager.createKey(CenozocraftEntityBase.class, DataSerializers.VARINT);
-    private static final DataParameter<Boolean> TAMED = EntityDataManager.createKey(CenozocraftEntityBase.class, DataSerializers.BOOLEAN);
-    private static final DataParameter<Optional<UUID>> OWNER = EntityDataManager.createKey(CenozocraftEntityBase.class, CenozocraftDataSerializers.UUID);
-    private EntityAIWander wander;
-    public static boolean tamable = false;
-    public static List<Item> tameItems = null;
-    protected boolean isSitting;
+    private static final DataParameter<Byte> STATE = EntityDataManager.createKey(CenozocraftEntityBase.class, DataSerializers.BYTE);
+    private static final DataParameter<Integer> VARIANT = EntityDataManager.createKey(CenozocraftEntityBase.class, DataSerializers.VARINT);
+    private final int textureCount;
+    private List<Item> tameItems = new ArrayList<>();
+    private int tameDifficulty = 0;
+    protected ResourceLocation location;
 
     public CenozocraftEntityBase(World worldIn) {
         super(worldIn);
-        wander = new EntityAIWander(this, 0.2D);
-        this.tasks.addTask(0, wander);
+        if(worldIn.isRemote) {
+            ResourceLocation textures = getTextures();
+            this.textureCount = Objects.requireNonNull(new File(getClass().getResource("/assets/" + textures.getResourceDomain() + "/" + textures.getResourcePath()).getFile()).list()).length;
+        }
+        else this.textureCount = 0;
     }
+
+    public ResourceLocation getTextures() {
+        if(location == null) location = new ResourceLocation(CenozocraftReference.ID, "textures/entity/" + EntityList.getEntityString(this) + "/");
+        return location;
+    }
+
+    protected void initEntityAI() {
+        super.initEntityAI();
+        this.aiSit = new EntityAISit(this);
+        this.tasks.addTask(0, aiSit);
+        this.tasks.addTask(0, new EntityAILookIdle(this));
+        this.tasks.addTask(0, new EntityAIWander(this, 0.2D) {
+            @Override
+            public boolean shouldExecute() {
+                return getState() == EnumState.WANDERING && super.shouldExecute();
+            }
+        });
+        this.tasks.addTask(0, new EntityAIFollowOwner(this, 0.2D, 4, 16) {
+            @Override
+            public boolean shouldExecute() {
+                return getState() == EnumState.FOLLOWING && super.shouldExecute();
+            }
+        });
+        this.applyEntityAI();
+    }
+
+    protected void applyEntityAI() {}
 
     public void entityInit(){
-        this.dataManager.register(MODE, 0);
-        this.dataManager.register(TAMED, false);
-        this.dataManager.register(OWNER, Optional.empty());
         super.entityInit();
+        this.dataManager.register(STATE, (byte)0);
+        this.dataManager.register(VARIANT, 0);
+    }
+    public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData livingData){
+        livingData = super.onInitialSpawn(difficulty, livingData);
+        if(world.isRemote && getVariantNumber() > 1) this.setVariant(this.rand.nextInt(getVariantNumber()));
+        return livingData;
     }
 
-    public void setMode(int value){
-        this.dataManager.set(MODE, value);
+    @Override
+    public void setSitting(boolean sitting) {
+        this.setState(EnumState.SITTING);
+        super.setSitting(sitting);
     }
 
-    public int getMode(){
-        return this.dataManager.get(MODE);
+    private void setVariant(int value){
+        this.dataManager.set(VARIANT, value);
     }
 
-    public void setTamed(boolean value){
-        this.dataManager.set(TAMED, value);
+    public int getVariant(){
+        return this.dataManager.get(VARIANT);
     }
 
-    public boolean getTamed(){
-        return this.dataManager.get(TAMED);
+    @SideOnly(Side.CLIENT)
+    public int getVariantNumber(){
+        return textureCount;
     }
 
-    public void setOwner(@Nullable UUID value){
-        this.dataManager.set(OWNER, Optional.ofNullable(value));
-    }
-
-    public UUID getOwner(){
-        return this.dataManager.get(OWNER).orElse(null);
-    }
-
-    protected void setTamable(Item... items){
-        tamable = true;
-        tameItems = Lists.newArrayList(items);
-    }
-
-    protected boolean processInteract(EntityPlayer player, EnumHand hand) {
-        ItemStack item = player.getHeldItem(hand);
-        if(tamable && !getTamed() && tameItems.contains(item.getItem())) {
-            if (!player.capabilities.isCreativeMode)
-            {
-                item.shrink(1);
-            }
-            if (!this.world.isRemote)
-            {
-                if (this.rand.nextInt(3) == 0)
-                {
-                    this.setTamed(true);
-                    this.setOwner(player.getUniqueID());
-                    this.playTameEffect(true);
-                    this.setMode(1);
-                    this.world.setEntityState(this, (byte)7);
+    @Nullable
+    @Override
+    public EntityAgeable createChild(@Nonnull EntityAgeable ageable) {
+        try {
+            if (getClass().isInstance(ageable)) {
+                CenozocraftEntityBase entity = this.getClass().getConstructor(World.class).newInstance(this.world);
+                UUID uuid = this.getOwnerId();
+                if (uuid != null) {
+                    entity.setOwnerId(uuid);
+                    entity.setTamed(true);
                 }
-                else
-                {
+                return entity;
+            }
+        } catch (ReflectiveOperationException e){
+            CenozocraftMain.getLogger().error("Failed to create child for " + toString(), e);
+        }
+        return null;
+    }
+
+    public boolean processInteract(EntityPlayer player, @Nonnull EnumHand hand) {
+        ItemStack stack = player.getHeldItem(hand);
+        if(!isTamed() && isTameItem(stack)) {
+            if (!player.capabilities.isCreativeMode) stack.shrink(1);
+            if (!this.world.isRemote) {
+                if(this instanceof CenozocraftMonsterBase) ((CenozocraftMonsterBase)this).friends.put(player.getUniqueID(), 0);
+                if (this.rand.nextInt(3 + tameDifficulty) == 0) {
+                    this.setTamedBy(player);
+                    this.playTameEffect(true);
+                    this.aiSit.setSitting(true);
+                    this.world.setEntityState(this, (byte)7);
+                } else {
                     this.playTameEffect(false);
                     this.world.setEntityState(this, (byte)6);
                 }
             }
         }
-        else if(getTamed() && getOwner() == player.getUniqueID() && item.getItem() == Items.STICK){
-            this.setMode(getMode()==3?0:getMode()+1);
-        }
+        else if(isTamed() && getOwnerId() == player.getUniqueID() && stack.getItem() == Items.STICK) this.setState(getState().ordinal()==3? EnumState.WANDERING: EnumState.values()[getState().ordinal()+1]);
         return super.processInteract(player, hand);
     }
 
-    public void onLivingUpdate(){
-        //TODO: finish the mode setup
-        if(!world.isRemote){
-            wander.setExecutionChance(getMode()!=0?Integer.MAX_VALUE:120);
-            isSitting = getMode()==1;
-        }
-        super.onLivingUpdate();
-    }
-
-    public void writeEntityToNBT(NBTTagCompound compound)
-    {
-        compound.setInteger("mode", getMode());
-        compound.setBoolean("tamed", getTamed());
+    public void writeEntityToNBT(NBTTagCompound compound) {
         super.writeEntityToNBT(compound);
+        compound.setInteger("state", getState().ordinal());
+        compound.setInteger("variant", getVariant());
     }
 
     public void readEntityFromNBT(NBTTagCompound compound) {
-        this.setMode(compound.getInteger("mode"));
-        this.setTamed(compound.getBoolean("tamed"));
         super.readEntityFromNBT(compound);
+        this.setState(EnumState.values()[compound.getInteger("state")]);
+        this.setVariant(compound.getInteger("variant"));
     }
 
-    private void playTameEffect(boolean play)
-    {
-        for (int i = 0; i < 7; ++i)
-        {
-            double d0 = this.rand.nextGaussian() * 0.02D;
-            double d1 = this.rand.nextGaussian() * 0.02D;
-            double d2 = this.rand.nextGaussian() * 0.02D;
-            this.world.spawnParticle(!play?EnumParticleTypes.SMOKE_NORMAL:EnumParticleTypes.HEART, this.posX + (double)(this.rand.nextFloat() * this.width * 2.0F) - (double)this.width, this.posY + 0.5D + (double)(this.rand.nextFloat() * this.height), this.posZ + (double)(this.rand.nextFloat() * this.width * 2.0F) - (double)this.width, d0, d1, d2);
+    protected void setTameItems(Item... items){
+        tameItems = Lists.newArrayList(items);
+    }
+
+    protected boolean isTameItem(ItemStack stack) {
+        return tameItems.contains(stack.getItem());
+    }
+
+    protected void setTameDifficulty(float difficulty){
+        tameDifficulty = MathHelper.floor(difficulty * 2);
+    }
+
+    private void setState(EnumState state) {
+        if(state != getState()) {
+            this.dataManager.set(STATE, (byte) state.ordinal());
         }
+    }
+
+    private EnumState getState(){
+        return EnumState.values()[this.dataManager.get(STATE)];
+    }
+
+    public enum EnumState {
+        WANDERING,
+        SITTING,
+        @SuppressWarnings("unused") STAY,
+        FOLLOWING
     }
 }
