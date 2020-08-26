@@ -11,7 +11,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class RenderCaveBear extends CenozocraftRenderer<EntityCaveBear> {
-
     private final ModelCaveBear adultStanding = new ModelCaveBear.AdultStanding();
     private final ModelCaveBear childStanding = new ModelCaveBear.ChildStanding();
     private ResourceLocation[] childTextures;
@@ -23,22 +22,10 @@ public class RenderCaveBear extends CenozocraftRenderer<EntityCaveBear> {
     @Nullable
     @Override
     protected ResourceLocation getEntityTexture(@Nonnull EntityCaveBear entity) {
-        if(entity.isChild()) {
-            if (childTextures == null) {
-                final int v = entity.getVariantNumber();
-                childTextures = new ResourceLocation[v];
-                if (textureLocation == null) textureLocation = entity.getTextureLocation();
-                for (int i = 0; i < v; i++) childTextures[i] = new ResourceLocation(textureLocation.getNamespace(), textureLocation.getPath() + "/child_" + (i + 1) + ".png");
-            }
-        } else {
-            if (textures == null) {
-                final int v = entity.getVariantNumber();
-                textures = new ResourceLocation[v];
-                if (textureLocation == null) textureLocation = entity.getTextureLocation();
-                for (int i = 0; i < v; i++) textures[i] = new ResourceLocation(textureLocation.getPath(), textureLocation.getPath() + "/adult_" + (i + 1) + ".png");
-            }
-        }
-        return textures[entity.getVariant()];
+        return (entity.isChild() ?
+                (childTextures = getTextures(entity, "child", childTextures)) :
+                (textures = getTextures(entity, "adult", textures)))
+                [entity.getVariant()];
     }
 
     @Override

@@ -5,7 +5,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
-import net.msrandom.cenozocraft.Cenozocraft;
 import net.msrandom.cenozocraft.entity.CenozocraftEntityBase;
 
 import javax.annotation.Nonnull;
@@ -46,14 +45,19 @@ public abstract class CenozocraftRenderer<T extends CenozocraftEntityBase> exten
     @Nullable
     @Override
     protected ResourceLocation getEntityTexture(@Nonnull T entity) {
-        if (textures == null || textures.length == 0) {
+        return (textures = getTextures(entity, "texture", textures))[entity.getVariant()];
+    }
+
+    protected ResourceLocation[] getTextures(T entity, String prefix, ResourceLocation[] textures) {
+        if (textures == null) {
             final int v = entity.getVariantNumber();
             textures = new ResourceLocation[v];
             if (textureLocation == null) textureLocation = entity.getTextureLocation();
             for (int i = 0; i < v; i++)
-                textures[i] = new ResourceLocation(textureLocation.getPath(), textureLocation.getPath() + "/texture_" + (i + 1) + ".png");
+                textures[i] = new ResourceLocation(textureLocation.getPath(), String.format("%s/%s_%d.png", textureLocation.getPath(), prefix, i + 1));
         }
-        return textures[entity.getVariant()];
+
+        return textures;
     }
 
     protected ModelBase getModel(T entity) {
