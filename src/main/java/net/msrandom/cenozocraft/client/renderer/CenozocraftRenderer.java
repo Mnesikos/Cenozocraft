@@ -1,67 +1,59 @@
 package net.msrandom.cenozocraft.client.renderer;
 
 import net.minecraft.client.model.ModelBase;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.entity.EntityRenderDispatcher;
+import net.minecraft.client.render.entity.MobEntityRenderer;
+import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderLiving;
-import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.util.ResourceLocation;
-import net.msrandom.cenozocraft.entity.CenozocraftEntityBase;
+import net.minecraft.client.render.entity.EntityRenderDispatcher;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.util.Identifier;
+import net.msrandom.cenozocraft.entity.CenozoCraftEntityBase;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public abstract class CenozocraftRenderer<T extends CenozocraftEntityBase> extends RenderLiving<T> {
-    protected ModelBase childModel;
-    protected ResourceLocation[] textures;
-    protected ResourceLocation textureLocation;
+public abstract class CenozocraftRenderer<T extends CenozoCraftEntityBase, M extends EntityModel<T>> extends MobEntityRenderer<T, M> {
+    protected M childModel;
+    protected Identifier[] textures;
+    protected Identifier textureLocation;
 
-    public CenozocraftRenderer(RenderManager manager, ModelBase model, float shadow) {
+    public CenozocraftRenderer(EntityRenderDispatcher manager, M model, float shadow) {
         super(manager, model, shadow);
     }
 
-    public CenozocraftRenderer(RenderManager manager, ModelBase adultModel, ModelBase childModel, float shadow) {
+    public CenozocraftRenderer(EntityRenderDispatcher manager, M adultModel, M childModel, float shadow) {
         this(manager, adultModel, shadow);
         this.childModel = childModel;
     }
 
     @Override
-    public float prepareScale(@Nonnull T entity, float partialTicks) {
-        float f = super.prepareScale(entity, partialTicks);
-        if (childModel == null && entity.isChild()) {
-            GlStateManager.scale(0.75F, 0.75F, 0.75F);
-            GlStateManager.translate(0.0F, 16.0F * f, 0.0F);
-            GlStateManager.scale(0.5F, 0.5F, 0.5F);
-            GlStateManager.translate(0.0F, 24.0F * f, 0.0F);
-        }
-        return f;
+    public void render(T mobEntity, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i) {
+        model = getModel(mobEntity);
+        super.render(mobEntity, f, g, matrixStack, vertexConsumerProvider, i);
     }
 
     @Override
-    public void doRender(@Nonnull T entity, double x, double y, double z, float entityYaw, float partialTicks) {
-        mainModel = getModel(entity);
-        super.doRender(entity, x, y, z, entityYaw, partialTicks);
-    }
-
-    @Nullable
-    @Override
-    protected ResourceLocation getEntityTexture(@Nonnull T entity) {
+    public Identifier getTexture(T entity) {
         return (textures = getTextures(entity, "texture", textures))[entity.getVariant()];
     }
 
-    protected ResourceLocation[] getTextures(T entity, String prefix, ResourceLocation[] textures) {
+    protected Identifier[] getTextures(T entity, String prefix, Identifier[] textures) {
         if (textures == null) {
             final int v = entity.getVariantNumber();
-            textures = new ResourceLocation[v];
+            textures = new Identifier[v];
             if (textureLocation == null) textureLocation = entity.getTextureLocation();
             for (int i = 0; i < v; i++)
-                textures[i] = new ResourceLocation(textureLocation.getPath(), String.format("%s/%s_%d.png", textureLocation.getPath(), prefix, i + 1));
+                textures[i] = new Identifier(textureLocation.getPath(), String.format("%s/%s_%d.png", textureLocation.getPath(), prefix, i + 1));
         }
 
         return textures;
     }
 
-    protected ModelBase getModel(T entity) {
-        if (childModel != null && entity.isChild()) return childModel;
-        return mainModel;
+    protected M getModel(T entity) {
+        if (childModel != null && entity.isBaby()) return childModel;
+        return model;
     }
 }

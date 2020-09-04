@@ -1,95 +1,108 @@
 package net.msrandom.cenozocraft.entity.monster;
 
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.IEntityLivingData;
+import net.minecraft.entity.EntityData;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.EntityAITargetNonTamed;
-import net.minecraft.entity.monster.IMob;
+import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.data.DataTracker;
+import net.minecraft.entity.data.TrackedData;
+import net.minecraft.entity.data.TrackedDataHandlerRegistry;
+import net.minecraft.entity.mob.Monster;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.DamageSource;
-import net.minecraft.world.DifficultyInstance;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.LocalDifficulty;
+import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
-import net.msrandom.cenozocraft.entity.CenozocraftEntityBase;
+import net.msrandom.cenozocraft.entity.CenozoCraftEntityBase;
 
-import javax.annotation.Nonnull;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 
-public abstract class CenozocraftMonsterBase extends CenozocraftEntityBase implements IMob {
+public abstract class CenozocraftMonsterBase extends CenozoCraftEntityBase implements Monster {
+    private static final TrackedData<Byte> TYPE = DataTracker.registerData(CenozoCraftEntityBase.class, TrackedDataHandlerRegistry.BYTE);
+    public Map<UUID, AtomicInteger> friends = new HashMap<>();
+    private float hostileChance = 0;
 
-    private static final DataParameter<Byte> TYPE = EntityDataManager.createKey(CenozocraftEntityBase.class, DataSerializers.BYTE);
-    public Map<UUID, Integer> friends = new HashMap<>();
-    private int hostileChance = 0;
-
-    CenozocraftMonsterBase(World worldIn) {
-        super(worldIn);
+    CenozocraftMonsterBase(EntityType<? extends CenozocraftMonsterBase> type, World world) {
+        super(type, world);
         this.setTameDifficulty(1);
     }
 
-    public void entityInit(){
-        super.entityInit();
-        this.dataManager.register(TYPE, (byte)0);
+    public void initDataTracker(){
+        super.initDataTracker();
+        this.dataTracker.startTracking(TYPE, (byte)0);
     }
 
-    public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData livingData){
-        livingData = super.onInitialSpawn(difficulty, livingData);
-        this.setType(this.rand.nextInt(hostileChance)==0?(this.rand.nextBoolean()? EnumType.HOSTILE: EnumType.NEUTRAL): EnumType.PASSIVE);
-        return livingData;
+    @Override
+    public EntityData initialize(ServerWorldAccess serverWorldAccess, LocalDifficulty difficulty, SpawnReason spawnReason, EntityData entityData, CompoundTag entityTag) {
+        entityData = super.initialize(serverWorldAccess, difficulty, spawnReason, entityData, entityTag);
+        this.setHostility(this.random.nextFloat() <= hostileChance ? (this.random.nextBoolean() ? Hostility.HOSTILE : Hostility.NEUTRAL) : Hostility.PASSIVE);
+        return entityData;
     }
 
     @Override
     protected void applyEntityAI() {
         super.applyEntityAI();
-        this.targetTasks.addTask(0, new AIAttack<>(this, EntityPlayer.class));
-        this.targetTasks.addTask(0, new AIAttack<>(this, CenozocraftEntityBase.class, input -> !(input instanceof CenozocraftMonsterBase)));
+        this.targetSelector.add(0, new AIAttack<>(this, PlayerEntity.class));
+        this.targetSelector.add(0, new AIAttack<>(this, CenozoCraftEntityBase.class, input -> !(input instanceof CenozocraftMonsterBase)));
     }
 
     @Override
-    public boolean attackEntityFrom(@Nonnull DamageSource source, float amount) {
-        if(getType() != EnumType.PASSIVE && source.getTrueSource() instanceof  EntityLivingBase) this.setRevengeTarget((EntityLivingBase) source.getTrueSource());
-        return super.attackEntityFrom(source, amount);
+    public boolean damage(DamageSource source, float amount) {
+        if (getHostility() != Hostility.PASSIVE && source.getAttacker() instanceof LivingEntity)
+            this.setRevengeTarget((LivingEntity) source.getAttacker());
+        return super.damage(source, amount);
     }
 
     @Override
-    public void onLivingUpdate() {
-        for(Map.Entry<UUID, Integer> set : friends.entrySet()) {
-            if(set.getValue() > 1000) friends.remove(set.getKey());
-            else friends.replace(set.getKey(), set.getValue()+1);
+    protected void mobTick() {
+        for (Map.Entry<UUID, AtomicInteger> set : friends.entrySet()) {
+            if (set.getValue().get() > 1000) friends.remove(set.getKey());
+            else set.getValue().incrementAndGet();
         }
-        super.onLivingUpdate();
+        super.mobTick();
     }
 
-    public void writeEntityToNBT(NBTTagCompound compound) {
-        super.writeEntityToNBT(compound);
-        compound.setInteger("type", getType().ordinal());
+    @Override
+    public void writeCustomDataToTag(CompoundTag tag) {
+        super.writeCustomDataToTag(tag);
+        tag.putInt("type", getHostility().ordinal());
     }
 
-    public void readEntityFromNBT(NBTTagCompound compound) {
-        super.readEntityFromNBT(compound);
-        this.setType(EnumType.values()[compound.getInteger("type")]);
+    @Override
+    public void readCustomDataFromTag(CompoundTag tag) {
+        super.readCustomDataFromTag(tag);
+        this.setHostility(Hostility.VALUES[tag.getInt("type")]);
     }
 
-    private void setType(EnumType type) {
-        this.dataManager.set(TYPE, (byte) type.ordinal());
+    private void setHostility(Hostility type) {
+        this.dataTracker.set(TYPE, (byte) type.ordinal());
     }
 
-    private EnumType getType(){
-        return EnumType.values()[this.dataManager.get(TYPE)];
+    private Hostility getHostility(){
+        return Hostility.VALUES[this.dataTracker.get(TYPE)];
     }
 
-    void setHostileChance(float chance){
-        hostileChance = chance==0?0:Math.round(1 / chance);
+    void setHostileChance(float chance) {
+        hostileChance = chance;
     }
 
-    protected static class AIAttack<T extends EntityLivingBase> extends EntityAITargetNonTamed<T>{
+    @Override
+    protected void onHealed(PlayerEntity player) {
+        friends.computeIfAbsent(player.getUuid(), k -> new AtomicInteger()).set(0);
+    }
 
+    protected static class AIAttack<T extends LivingEntity> extends EntityAITargetNonTamed<T>{
         private final CenozocraftMonsterBase entity;
 
         AIAttack(CenozocraftMonsterBase entity, Class<T> classTarget, Predicate<? super T > targetSelector) {
-            super(entity, classTarget, true, input -> (targetSelector != null && !targetSelector.test(input)) || (entity.getType() == EnumType.NEUTRAL && input != entity.getRevengeTarget()) && (!(input instanceof EntityPlayer) || !entity.friends.containsKey(input.getUniqueID())));
+            super(entity, classTarget, true, input -> (targetSelector != null && !targetSelector.test(input)) || (entity.getHostility() == Hostility.NEUTRAL && input != entity.getRevengeTarget()) && (!(input instanceof EntityPlayer) || !entity.friends.containsKey(input.getUniqueID())));
             this.entity = entity;
         }
 
@@ -98,14 +111,16 @@ public abstract class CenozocraftMonsterBase extends CenozocraftEntityBase imple
         }
 
         @Override
-        public boolean shouldExecute() {
-            return entity.getType() != EnumType.PASSIVE && (entity.getType() != EnumType.NEUTRAL || entity.getRevengeTarget() != null);
+        public boolean canStart() {
+            return entity.getHostility() != Hostility.PASSIVE && (entity.getHostility() != Hostility.NEUTRAL || entity.getRevengeTarget() != null);
         }
     }
 
-    public enum EnumType {
+    public enum Hostility {
         HOSTILE,
         PASSIVE,
-        NEUTRAL
+        NEUTRAL;
+
+        public static final Hostility[] VALUES = values();
     }
 }
