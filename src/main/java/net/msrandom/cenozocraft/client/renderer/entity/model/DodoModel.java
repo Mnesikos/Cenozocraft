@@ -1,10 +1,13 @@
 package net.msrandom.cenozocraft.client.renderer.entity.model;
 
-import net.minecraft.client.model.ModelBase;
+import com.google.common.collect.ImmutableList;
 import net.minecraft.client.model.ModelPart;
-import net.minecraft.entity.Entity;
+import net.minecraft.client.render.entity.model.AnimalModel;
+import net.msrandom.cenozocraft.entity.passive.DodoEntity;
 
-public class DodoModel extends ModelBase {
+import java.util.Collections;
+
+public class DodoModel extends AnimalModel<DodoEntity> {
     public ModelPart Body;
     public ModelPart Chest;
     public ModelPart Chest_1;
@@ -59,6 +62,7 @@ public class DodoModel extends ModelBase {
     public ModelPart wing6_1;
     public ModelPart wing7_1;
     public ModelPart wing8_1;
+    private final Iterable<ModelPart> parts;
 
     public DodoModel() {
         this.textureWidth = 64;
@@ -271,6 +275,7 @@ public class DodoModel extends ModelBase {
         this.shape26_7.setPivot(0.0F, 0.5F, 3.0F);
         this.shape26_7.addCuboid(-0.5F, 0.0F, 0.0F, 1, 1, 1, 0.0F);
         this.setRotateAngle(shape26_7, -0.5235987755982988F, 0.0F, 0.0F);
+        this.parts = ImmutableList.of(Body);
         this.Body.addChild(this.wingbase);
         this.shape23_2.addChild(this.shape26_3);
         this.tipofbeak.addChild(this.bottombottombeak);
@@ -327,8 +332,17 @@ public class DodoModel extends ModelBase {
     }
 
     @Override
-    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
-        this.Body.render(f5);
+    protected Iterable<ModelPart> getBodyParts() {
+        return parts;
+    }
+
+    @Override
+    protected Iterable<ModelPart> getHeadParts() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public void setAngles(DodoEntity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
     }
 
     public void setRotateAngle(ModelPart modelRenderer, float x, float y, float z) {
@@ -337,4 +351,3 @@ public class DodoModel extends ModelBase {
         modelRenderer.roll = z;
     }
 }
-

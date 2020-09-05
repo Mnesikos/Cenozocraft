@@ -1,11 +1,14 @@
 package net.msrandom.cenozocraft.client.renderer.entity.model;
 
-import net.minecraft.client.model.ModelBase;
+import com.google.common.collect.ImmutableList;
 import net.minecraft.client.model.ModelPart;
-import net.minecraft.entity.Entity;
+import net.minecraft.client.render.entity.model.AnimalModel;
+import net.msrandom.cenozocraft.entity.monster.SmilodonEntity;
+
+import java.util.Collections;
 
 @SuppressWarnings("WeakerAccess")
-public abstract class SmilodonModel extends ModelBase {
+public abstract class SmilodonModel<T extends SmilodonEntity> extends AnimalModel<T> {
     public ModelPart shoulders;
     public ModelPart neck;
     public ModelPart body;
@@ -48,9 +51,31 @@ public abstract class SmilodonModel extends ModelBase {
     public ModelPart rightpaw;
     public ModelPart righttoes;
     public ModelPart bellylower;
+    private Iterable<ModelPart> parts;
 
-    public static class Populator extends SmilodonModel {
+    @Override
+    protected Iterable<ModelPart> getBodyParts() {
+        if (parts == null) parts = ImmutableList.of(shoulders);
+        return parts;
+    }
 
+    @Override
+    protected Iterable<ModelPart> getHeadParts() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public void setAngles(SmilodonEntity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
+
+    }
+
+    public void setRotateAngle(ModelPart modelRenderer, float x, float y, float z) {
+        modelRenderer.pitch = x;
+        modelRenderer.yaw = y;
+        modelRenderer.roll = z;
+    }
+
+    public static class Populator<T extends SmilodonEntity> extends SmilodonModel<T> {
         public Populator() {
             this.textureWidth = 128;
             this.textureHeight = 96;
@@ -272,15 +297,9 @@ public abstract class SmilodonModel extends ModelBase {
             this.leftforearm2.addChild(this.leftpaw);
             this.snout.addChild(this.cheek2);
         }
-
-        @Override
-        public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
-            this.shoulders.render(f5);
-        }
     }
 
-    public static class Fatallis extends SmilodonModel {
-
+    public static class Fatallis<T extends SmilodonEntity> extends SmilodonModel<T> {
         public Fatallis() {
             this.textureWidth = 128;
             this.textureHeight = 96;
@@ -502,15 +521,10 @@ public abstract class SmilodonModel extends ModelBase {
             this.shoulders.addChild(this.rightupperarm);
             this.leftpaw.addChild(this.lefttoes);
         }
-
-        @Override
-        public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
-            CenozocraftUtils.scale(shoulders, 0.9);
-        }
     }
 
-    public static class Gracillis extends SmilodonModel{
-        public Gracillis() {
+    public static class Gracilis<T extends SmilodonEntity> extends SmilodonModel<T> {
+        public Gracilis() {
             this.textureWidth = 128;
             this.textureHeight = 96;
             this.tail1 = new ModelPart(this, 70, 24);
@@ -731,16 +745,5 @@ public abstract class SmilodonModel extends ModelBase {
             this.snout.addChild(this.chin);
             this.cheek2.addChild(this.canine3);
         }
-
-        @Override
-        public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
-            CenozocraftUtils.scale(shoulders, 0.8);
-        }
-    }
-
-    public void setRotateAngle(ModelPart modelRenderer, float x, float y, float z) {
-        modelRenderer.pitch = x;
-        modelRenderer.yaw = y;
-        modelRenderer.roll = z;
     }
 }

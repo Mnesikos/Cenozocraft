@@ -1,10 +1,13 @@
 package net.msrandom.cenozocraft.client.renderer.entity.model;
 
-import net.minecraft.client.model.ModelBase;
+import com.google.common.collect.ImmutableList;
 import net.minecraft.client.model.ModelPart;
-import net.minecraft.entity.Entity;
+import net.minecraft.client.render.entity.model.AnimalModel;
+import net.msrandom.cenozocraft.entity.passive.QuaggaEntity;
 
-public class QuaggaModel extends ModelBase {
+import java.util.Collections;
+
+public class QuaggaModel extends AnimalModel<QuaggaEntity> {
     public ModelPart body;
     public ModelPart bodyback;
     public ModelPart bodyfront;
@@ -35,6 +38,7 @@ public class QuaggaModel extends ModelBase {
     public ModelPart frontrightleg1;
     public ModelPart frontrightleg2;
     public ModelPart frontrighthoove;
+    private final Iterable<ModelPart> parts;
 
     public QuaggaModel() {
         this.textureWidth = 128;
@@ -152,6 +156,7 @@ public class QuaggaModel extends ModelBase {
         this.frontrighthoove = new ModelPart(this, 78, 0);
         this.frontrighthoove.setPivot(0.0F, 4.0F, 1.5F);
         this.frontrighthoove.addCuboid(-2.0F, 0.0F, -2.0F, 4, 3, 4, 0.0F);
+        this.parts = ImmutableList.of(body);
         this.frontrightthigh.addChild(this.frontrightleg1);
         this.bodyfront.addChild(this.frontrightthigh);
         this.head.addChild(this.snout);
@@ -184,8 +189,18 @@ public class QuaggaModel extends ModelBase {
     }
 
     @Override
-    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
-        this.body.render(f5);
+    protected Iterable<ModelPart> getBodyParts() {
+        return parts;
+    }
+
+    @Override
+    protected Iterable<ModelPart> getHeadParts() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public void setAngles(QuaggaEntity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
+
     }
 
     public void setRotateAngle(ModelPart modelRenderer, float x, float y, float z) {

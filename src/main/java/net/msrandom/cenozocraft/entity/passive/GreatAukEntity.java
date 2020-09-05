@@ -8,10 +8,5 @@ public class GreatAukEntity extends CenozoCraftEntityBase {
     public GreatAukEntity(EntityType<? extends GreatAukEntity> type, World world) {
         super(type, world);
     }
-
-    @Override
-    public int getVariantNumber() {
-        return super.getVariantNumber() / 2;
-    }
 }
 

@@ -5,7 +5,7 @@ import net.msrandom.cenozocraft.client.renderer.entity.model.ElasmotheriumModel;
 import net.msrandom.cenozocraft.client.renderer.CenozocraftRenderer;
 import net.msrandom.cenozocraft.entity.passive.ElasmotheriumEntity;
 
-public class ElasmotheriumRenderer extends CenozocraftRenderer<ElasmotheriumEntity> {
+public class ElasmotheriumRenderer extends CenozocraftRenderer<ElasmotheriumEntity, ElasmotheriumModel> {
     public ElasmotheriumRenderer(EntityRenderDispatcher rendermanagerIn) {
         super(rendermanagerIn, new ElasmotheriumModel(), 0.3f);
     }

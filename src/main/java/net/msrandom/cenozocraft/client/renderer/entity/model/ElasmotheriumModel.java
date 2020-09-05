@@ -1,10 +1,13 @@
 package net.msrandom.cenozocraft.client.renderer.entity.model;
 
-import net.minecraft.client.model.ModelBase;
+import com.google.common.collect.ImmutableList;
 import net.minecraft.client.model.ModelPart;
-import net.minecraft.entity.Entity;
+import net.minecraft.client.render.entity.model.AnimalModel;
+import net.msrandom.cenozocraft.entity.passive.ElasmotheriumEntity;
 
-public class ElasmotheriumModel extends ModelBase {
+import java.util.Collections;
+
+public class ElasmotheriumModel extends AnimalModel<ElasmotheriumEntity> {
     public ModelPart Body;
     public ModelPart Hips;
     public ModelPart BodyHump;
@@ -76,6 +79,7 @@ public class ElasmotheriumModel extends ModelBase {
     public ModelPart RightLeg1Toe1_2;
     public ModelPart RightLeg1Toe2_2;
     public ModelPart RightLeg1Toe3_2;
+    private final Iterable<ModelPart> parts;
 
     public ElasmotheriumModel() {
         this.textureWidth = 512;
@@ -343,6 +347,7 @@ public class ElasmotheriumModel extends ModelBase {
         this.BodyBackTop.setPivot(0.0F, -14.0F, 24.0F);
         this.BodyBackTop.addCuboid(-12.5F, 0.0F, -22.0F, 25, 13, 22, 0.0F);
         this.setRotateAngle(BodyBackTop, -0.17453292519943295F, 0.0F, 0.0F);
+        this.parts = ImmutableList.of(Body);
         this.Horn3.addChild(this.Horn4);
         this.Head.addChild(this.Jaw);
         this.RightLeg1_2.addChild(this.RightLeg1_3);
@@ -416,8 +421,18 @@ public class ElasmotheriumModel extends ModelBase {
     }
 
     @Override
-    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
-        this.Body.render(f5);
+    protected Iterable<ModelPart> getBodyParts() {
+        return parts;
+    }
+
+    @Override
+    protected Iterable<ModelPart> getHeadParts() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public void setAngles(ElasmotheriumEntity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
+
     }
 
     public void setRotateAngle(ModelPart modelRenderer, float x, float y, float z) {

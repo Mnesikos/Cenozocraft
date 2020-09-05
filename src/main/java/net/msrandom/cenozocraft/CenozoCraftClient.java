@@ -23,15 +23,15 @@ public class CenozoCraftClient implements ClientModInitializer {
         registerRenderer(CenozoCraftEntities.DIREWOLF, DireWolfRenderer::new);
         registerRenderer(CenozoCraftEntities.DODO, DodoRenderer::new);
         registerRenderer(CenozoCraftEntities.ELASMOTHERIUM, ElasmotheriumRenderer::new);
-        //registerRenderer(CenozoCraftEntities.GIANT_BEAVER, GiantBeaverRenderer::new);
+        registerRenderer(CenozoCraftEntities.GIANT_BEAVER, GiantBeaverRenderer::new);
         registerRenderer(CenozoCraftEntities.GREAT_AUK, GreatAukRenderer::new);
         registerRenderer(CenozoCraftEntities.HOUSE_MOUSE, HouseMouseRenderer::new);
         registerRenderer(CenozoCraftEntities.IRISH_ELK, IrishElkRenderer::new);
-        //registerRenderer(CenozoCraftEntities.MEGATHERIUM, MegatheriumRenderer::new);
-        //registerRenderer(CenozoCraftEntities.PROCOPTODON, ProcoptodonRenderer::new);
+        registerRenderer(CenozoCraftEntities.MEGATHERIUM, MegatheriumRenderer::new);
+        registerRenderer(CenozoCraftEntities.PROCOPTODON, ProcoptodonRenderer::new);
         registerRenderer(CenozoCraftEntities.QUAGGA, QuaggaRenderer::new);
-        //registerRenderer(CenozoCraftEntities.THYLACINE, ThylacineRenderer::new);
-        //registerRenderer(CenozoCraftEntities.TITANIS, TitanisRenderer::new);
+        registerRenderer(CenozoCraftEntities.THYLACINE, ThylacineRenderer::new);
+        registerRenderer(CenozoCraftEntities.TITANIS, TitanisRenderer::new);
     }
 
     private <T extends CenozoCraftEntityBase> void registerRenderer(EntityType<T> type, Function<EntityRenderDispatcher, ? extends EntityRenderer<T>> renderer) {

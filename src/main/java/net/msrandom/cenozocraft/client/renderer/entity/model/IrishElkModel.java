@@ -1,11 +1,14 @@
 package net.msrandom.cenozocraft.client.renderer.entity.model;
 
-import net.minecraft.client.model.ModelBase;
+import com.google.common.collect.ImmutableList;
 import net.minecraft.client.model.ModelPart;
-import net.minecraft.entity.Entity;
+import net.minecraft.client.render.entity.model.AnimalModel;
+import net.msrandom.cenozocraft.entity.monster.IrishElkEntity;
+
+import java.util.Collections;
 
 @SuppressWarnings("WeakerAccess")
-public class IrishElkModel extends ModelBase {
+public class IrishElkModel extends AnimalModel<IrishElkEntity> {
     public ModelPart Body;
     public ModelPart Hips;
     public ModelPart neck;
@@ -34,6 +37,7 @@ public class IrishElkModel extends ModelBase {
     public ModelPart FootRight_1;
     public ModelPart LegLeft_1;
     public ModelPart FootLeft_1;
+    private final Iterable<ModelPart> parts;
 
     public IrishElkModel() {
         this.textureWidth = 131;
@@ -162,6 +166,7 @@ public class IrishElkModel extends ModelBase {
         this.Jaw = new ModelPart(this, 0, 59);
         this.Jaw.setPivot(0.0F, 0.9F, -0.8F);
         this.Jaw.addCuboid(-2.0F, 0.0F, -4.5F, 4, 2, 6, 0.0F);
+        this.parts = ImmutableList.of(Body);
         this.Body.addChild(this.neck);
         this.ThighLeft.addChild(this.LegLeft_1);
         this.Mouth.addChild(this.Nose);
@@ -192,8 +197,18 @@ public class IrishElkModel extends ModelBase {
     }
 
     @Override
-    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
-        CenozocraftUtils.scale(Body, 0.5);
+    protected Iterable<ModelPart> getBodyParts() {
+        return parts;
+    }
+
+    @Override
+    protected Iterable<ModelPart> getHeadParts() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public void setAngles(IrishElkEntity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
+
     }
 
     public void setRotateAngle(ModelPart modelRenderer, float x, float y, float z) {

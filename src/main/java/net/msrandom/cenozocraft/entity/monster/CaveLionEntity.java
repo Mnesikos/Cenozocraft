@@ -9,5 +9,10 @@ public class CaveLionEntity extends CenozocraftMonsterBase {
         this.setTameDifficulty(1.6f);
         this.setHostileChance(0.5f);
     }
+
+    @Override
+    public int getVariantCount() {
+        return 3;
+    }
 }
 

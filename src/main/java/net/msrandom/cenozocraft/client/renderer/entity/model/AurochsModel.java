@@ -1,13 +1,13 @@
 package net.msrandom.cenozocraft.client.renderer.entity.model;
 
 import net.minecraft.client.model.ModelPart;
-import net.minecraft.client.render.entity.model.CompositeEntityModel;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.entity.Entity;
+import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.entity.model.EntityModel;
+import net.minecraft.client.util.math.MatrixStack;
 import net.msrandom.cenozocraft.entity.passive.AurochsEntity;
 
 @SuppressWarnings("WeakerAccess")
-public abstract class AurochsModel extends CompositeEntityModel<AurochsEntity> {
+public abstract class AurochsModel extends EntityModel<AurochsEntity> {
     public ModelPart Body2;
     public ModelPart Neck;
     public ModelPart Body1;
@@ -38,6 +38,17 @@ public abstract class AurochsModel extends CompositeEntityModel<AurochsEntity> {
     public ModelPart Horns_4;
     public ModelPart Horns_5;
     public ModelPart Horns_6;
+
+    @Override
+    public void setAngles(AurochsEntity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
+
+    }
+
+    public void setRotateAngle(ModelPart modelRenderer, float x, float y, float z) {
+        modelRenderer.pitch = x;
+        modelRenderer.yaw = y;
+        modelRenderer.roll = z;
+    }
 
     public static class Bull extends AurochsModel {
         public Bull() {
@@ -193,27 +204,19 @@ public abstract class AurochsModel extends CompositeEntityModel<AurochsEntity> {
         }
 
         @Override
-        public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
-            GlStateManager.pushMatrix();
-            GlStateManager.translate(this.Neck.offsetX, this.Neck.offsetY, this.Neck.offsetZ);
-            GlStateManager.translate(this.Neck.rotationPointX * f5, this.Neck.rotationPointY * f5, this.Neck.rotationPointZ * f5);
-            GlStateManager.scale(1.2D, 1.46D, 1.46D);
-            GlStateManager.translate(-this.Neck.offsetX, -this.Neck.offsetY, -this.Neck.offsetZ);
-            GlStateManager.translate(-this.Neck.rotationPointX * f5, -this.Neck.rotationPointY * f5, -this.Neck.rotationPointZ * f5);
-            this.Neck.render(f5);
-            GlStateManager.popMatrix();
-            GlStateManager.pushMatrix();
-            GlStateManager.translate(this.Body2.offsetX, this.Body2.offsetY, this.Body2.offsetZ);
-            GlStateManager.translate(this.Body2.rotationPointX * f5, this.Body2.rotationPointY * f5, this.Body2.rotationPointZ * f5);
-            GlStateManager.scale(1.2D, 1.56D, 1.56D);
-            GlStateManager.translate(-this.Body2.offsetX, -this.Body2.offsetY, -this.Body2.offsetZ);
-            GlStateManager.translate(-this.Body2.rotationPointX * f5, -this.Body2.rotationPointY * f5, -this.Body2.rotationPointZ * f5);
-            this.Body2.render(f5);
-            GlStateManager.popMatrix();
+        public void render(MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float alpha) {
+            matrices.push();
+            matrices.scale(1.2f, 1.46f, 1.46f);
+            this.Neck.render(matrices, vertices, light, overlay, red, green, blue, alpha);
+            matrices.pop();
+            matrices.push();
+            matrices.scale(1.2f, 1.56f, 1.56f);
+            this.Body2.render(matrices, vertices, light, overlay, red, green, blue, alpha);
+            matrices.pop();
         }
     }
-    public static class Cow extends AurochsModel {
 
+    public static class Cow extends AurochsModel {
         public ModelPart shape53;
         public ModelPart shape54;
         public ModelPart shape54_1;
@@ -393,25 +396,18 @@ public abstract class AurochsModel extends CompositeEntityModel<AurochsEntity> {
         }
 
         @Override
-        public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
-            GlStateManager.pushMatrix();
-            GlStateManager.translate(this.Neck.offsetX, this.Neck.offsetY, this.Neck.offsetZ);
-            GlStateManager.translate(this.Neck.rotationPointX * f5, this.Neck.rotationPointY * f5, this.Neck.rotationPointZ * f5);
-            GlStateManager.scale(1.2937320000000003D, 1.2878514000000003D, 1.2749728860000005D);
-            GlStateManager.translate(-this.Neck.offsetX, -this.Neck.offsetY, -this.Neck.offsetZ);
-            GlStateManager.translate(-this.Neck.rotationPointX * f5, -this.Neck.rotationPointY * f5, -this.Neck.rotationPointZ * f5);
-            this.Neck.render(f5);
-            GlStateManager.popMatrix();
-            GlStateManager.pushMatrix();
-            GlStateManager.translate(this.Body2.offsetX, this.Body2.offsetY, this.Body2.offsetZ);
-            GlStateManager.translate(this.Body2.rotationPointX * f5, this.Body2.rotationPointY * f5, this.Body2.rotationPointZ * f5);
-            GlStateManager.scale(1.2914679690000002D, 1.2914679690000006D, 1.2785532893100007D);
-            GlStateManager.translate(-this.Body2.offsetX, -this.Body2.offsetY, -this.Body2.offsetZ);
-            GlStateManager.translate(-this.Body2.rotationPointX * f5, -this.Body2.rotationPointY * f5, -this.Body2.rotationPointZ * f5);
-            this.Body2.render(f5);
-            GlStateManager.popMatrix();
+        public void render(MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float alpha) {
+            matrices.push();
+            matrices.scale(1.2937320000000003f, 1.2878514000000003f, 1.2749728860000005f);
+            this.Neck.render(matrices, vertices, light, overlay, red, green, blue, alpha);
+            matrices.pop();
+            matrices.push();
+            matrices.scale(1.2914679690000002f, 1.2914679690000006f, 1.2785532893100007f);
+            this.Body2.render(matrices, vertices, light, overlay, red, green, blue, alpha);
+            matrices.pop();
         }
     }
+
     public static class Child extends AurochsModel {
         public Child() {
             this.textureWidth = 128;
@@ -521,33 +517,19 @@ public abstract class AurochsModel extends CompositeEntityModel<AurochsEntity> {
         }
 
         @Override
-        public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
-            GlStateManager.scale(0.75F, 0.75F, 0.75F);
-            GlStateManager.translate(0.0F, 16.0F * f5, 0.0F);
-            GlStateManager.scale(0.5F, 0.5F, 0.5F);
-            GlStateManager.translate(0.0F, 24.0F * f5, 0.0F);
-            GlStateManager.pushMatrix();
-            GlStateManager.translate(this.Neck.offsetX, this.Neck.offsetY, this.Neck.offsetZ);
-            GlStateManager.translate(this.Neck.rotationPointX * f5, this.Neck.rotationPointY * f5, this.Neck.rotationPointZ * f5);
-            GlStateManager.scale(0.94D, 0.94D, 0.93D);
-            GlStateManager.translate(-this.Neck.offsetX, -this.Neck.offsetY, -this.Neck.offsetZ);
-            GlStateManager.translate(-this.Neck.rotationPointX * f5, -this.Neck.rotationPointY * f5, -this.Neck.rotationPointZ * f5);
-            this.Neck.render(f5);
-            GlStateManager.popMatrix();
-            GlStateManager.pushMatrix();
-            GlStateManager.translate(this.Body2.offsetX, this.Body2.offsetY, this.Body2.offsetZ);
-            GlStateManager.translate(this.Body2.rotationPointX * f5, this.Body2.rotationPointY * f5, this.Body2.rotationPointZ * f5);
-            GlStateManager.scale(0.94D, 0.94D, 0.93D);
-            GlStateManager.translate(-this.Body2.offsetX, -this.Body2.offsetY, -this.Body2.offsetZ);
-            GlStateManager.translate(-this.Body2.rotationPointX * f5, -this.Body2.rotationPointY * f5, -this.Body2.rotationPointZ * f5);
-            this.Body2.render(f5);
-            GlStateManager.popMatrix();
+        public void render(MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float alpha) {
+            matrices.scale(0.75F, 0.75F, 0.75F);
+            matrices.translate(0.0F, 0.125f, 0.0F);
+            matrices.scale(0.5F, 0.5F, 0.5F);
+            matrices.translate(0.0F, 1.875F, 0.0F);
+            matrices.push();
+            matrices.scale(0.94f, 0.94f, 0.93f);
+            this.Neck.render(matrices, vertices, light, overlay, red, green, blue, alpha);
+            matrices.pop();
+            matrices.push();
+            matrices.scale(0.94f, 0.94f, 0.93f);
+            this.Body2.render(matrices, vertices, light, overlay, red, green, blue, alpha);
+            matrices.pop();
         }
-    }
-
-    public void setRotateAngle(ModelPart modelRenderer, float x, float y, float z) {
-        modelRenderer.pitch = x;
-        modelRenderer.yaw = y;
-        modelRenderer.roll = z;
     }
 }

@@ -8,5 +8,10 @@ public class ElasmotheriumEntity extends CenozoCraftEntityBase {
     public ElasmotheriumEntity(EntityType<? extends ElasmotheriumEntity> type, World world) {
         super(type, world);
     }
+
+    @Override
+    public int getVariantCount() {
+        return 3;
+    }
 }
 

@@ -10,4 +10,9 @@ public class HouseMouseEntity extends CenozoCraftEntityBase {
         super(type, world);
         addTameItems(Items.WHEAT_SEEDS, Items.MELON_SEEDS, Items.PUMPKIN_SEEDS, Items.BEETROOT_SEEDS);
     }
+
+    @Override
+    public int getVariantCount() {
+        return 3;
+    }
 }

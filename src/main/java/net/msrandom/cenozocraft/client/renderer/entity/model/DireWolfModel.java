@@ -1,12 +1,11 @@
 package net.msrandom.cenozocraft.client.renderer.entity.model;
 
-import net.minecraft.client.model.ModelBase;
+import com.google.common.collect.ImmutableList;
 import net.minecraft.client.model.ModelPart;
-import net.minecraft.client.render.entity.model.AnimalModel;
-import net.minecraft.entity.Entity;
+import net.minecraft.client.render.entity.model.CompositeEntityModel;
 import net.msrandom.cenozocraft.entity.monster.DireWolfEntity;
 
-public abstract class DireWolfModel extends AnimalModel<DireWolfEntity> {
+public abstract class DireWolfModel extends CompositeEntityModel<DireWolfEntity> {
     public ModelPart shoulders;
     public ModelPart neck;
     public ModelPart body;
@@ -37,6 +36,24 @@ public abstract class DireWolfModel extends AnimalModel<DireWolfEntity> {
     public ModelPart rightforearm;
     public ModelPart rightforearm2;
     public ModelPart rightpaw;
+    private Iterable<ModelPart> parts;
+
+    @Override
+    public Iterable<ModelPart> getParts() {
+        if (parts == null) parts = ImmutableList.of(shoulders);
+        return parts;
+    }
+
+    @Override
+    public void setAngles(DireWolfEntity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
+
+    }
+
+    public void setRotateAngle(ModelPart modelRenderer, float x, float y, float z) {
+        modelRenderer.pitch = x;
+        modelRenderer.yaw = y;
+        modelRenderer.roll = z;
+    }
 
     public static class Adult extends DireWolfModel {
         public ModelPart chestlower;
@@ -270,11 +287,6 @@ public abstract class DireWolfModel extends AnimalModel<DireWolfEntity> {
             this.tail2.addChild(this.tail3);
             this.rightforearm2.addChild(this.rightpaw);
         }
-
-        @Override
-        public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
-            CenozocraftUtils.scale(shoulders, 0.9);
-        }
     }
 
     public static class Child extends DireWolfModel {
@@ -437,16 +449,5 @@ public abstract class DireWolfModel extends AnimalModel<DireWolfEntity> {
             this.leftforearm2.addChild(this.leftpaw);
             this.butt.addChild(this.rightupperthigh);
         }
-
-        @Override
-        public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
-            CenozocraftUtils.scale(shoulders, 0.8);
-        }
-    }
-
-    public void setRotateAngle(ModelPart modelRenderer, float x, float y, float z) {
-        modelRenderer.pitch = x;
-        modelRenderer.yaw = y;
-        modelRenderer.roll = z;
     }
 }

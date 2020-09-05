@@ -1,9 +1,8 @@
 package net.msrandom.cenozocraft.client.renderer.entity.model;
 
-import net.minecraft.client.model.ModelBase;
+import com.google.common.collect.ImmutableList;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.entity.model.CompositeEntityModel;
-import net.minecraft.entity.Entity;
 import net.msrandom.cenozocraft.entity.monster.CaveBearEntity;
 
 public abstract class CaveBearModel extends CompositeEntityModel<CaveBearEntity> {
@@ -35,6 +34,24 @@ public abstract class CaveBearModel extends CompositeEntityModel<CaveBearEntity>
     public ModelPart Foot3;
     public ModelPart Leg4;
     public ModelPart Foot4;
+    private Iterable<ModelPart> parts;
+
+    @Override
+    public Iterable<ModelPart> getParts() {
+        if (parts == null) parts = ImmutableList.of(body);
+        return parts;
+    }
+
+    @Override
+    public void setAngles(CaveBearEntity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
+
+    }
+
+    public void setRotateAngle(ModelPart modelRenderer, float x, float y, float z) {
+        modelRenderer.pitch = x;
+        modelRenderer.yaw = y;
+        modelRenderer.roll = z;
+    }
 
     public static class Adult extends CaveBearModel {
         public Adult() {
@@ -340,11 +357,6 @@ public abstract class CaveBearModel extends CompositeEntityModel<CaveBearEntity>
             this.snout.addChild(this.nose);
             this.body.addChild(this.Thigh4);
         }
-
-        @Override
-        public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
-            this.body.render(f5);
-        }
     }
 
     public static class Child extends CaveBearModel {
@@ -636,21 +648,5 @@ public abstract class CaveBearModel extends CompositeEntityModel<CaveBearEntity>
             this.neck.addChild(this.necklower);
             this.neck.addChild(this.head);
         }
-
-        @Override
-        public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
-            this.body.render(f5);
-        }
-    }
-    
-    @Override
-    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
-        this.body.render(f5);
-    }
-
-    public void setRotateAngle(ModelPart modelRenderer, float x, float y, float z) {
-        modelRenderer.pitch = x;
-        modelRenderer.yaw = y;
-        modelRenderer.roll = z;
     }
 }

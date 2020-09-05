@@ -1,11 +1,11 @@
 package net.msrandom.cenozocraft.client.renderer.entity.model;
 
-import net.minecraft.client.model.ModelBase;
+import com.google.common.collect.ImmutableList;
 import net.minecraft.client.model.ModelPart;
-import net.minecraft.entity.Entity;
+import net.minecraft.client.render.entity.model.CompositeEntityModel;
+import net.msrandom.cenozocraft.entity.passive.GreatAukEntity;
 
-public abstract class GreatAukModel extends ModelBase {
-
+public abstract class GreatAukModel extends CompositeEntityModel<GreatAukEntity> {
     public ModelPart Hips;
     public ModelPart Torso;
     public ModelPart middlelefttoe;
@@ -55,6 +55,24 @@ public abstract class GreatAukModel extends ModelBase {
     public ModelPart tailfeather3;
     public ModelPart tailfeather2;
     public ModelPart tailfeather1;
+    private Iterable<ModelPart> parts;
+
+    @Override
+    public Iterable<ModelPart> getParts() {
+        if (parts == null) parts = ImmutableList.of(Hips);
+        return parts;
+    }
+
+    @Override
+    public void setAngles(GreatAukEntity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
+
+    }
+
+    public void setRotateAngle(ModelPart modelRenderer, float x, float y, float z) {
+        modelRenderer.pitch = x;
+        modelRenderer.yaw = y;
+        modelRenderer.roll = z;
+    }
 
     public static class Adult extends GreatAukModel {
         public Adult() {
@@ -522,17 +540,6 @@ public abstract class GreatAukModel extends ModelBase {
             this.Neckbase.addChild(this.neck);
             this.head.addChild(this.upperbeakbase);
         }
-    }
-
-    @Override
-    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
-        this.Hips.render(f5);
-    }
-
-    public void setRotateAngle(ModelPart modelRenderer, float x, float y, float z) {
-        modelRenderer.pitch = x;
-        modelRenderer.yaw = y;
-        modelRenderer.roll = z;
     }
 }
 

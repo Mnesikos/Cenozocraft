@@ -4,13 +4,12 @@ import net.minecraft.entity.EntityData;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.ai.EntityAITargetNonTamed;
+import net.minecraft.entity.ai.goal.FollowTargetIfTamedGoal;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.Monster;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.LocalDifficulty;
@@ -56,7 +55,7 @@ public abstract class CenozocraftMonsterBase extends CenozoCraftEntityBase imple
     @Override
     public boolean damage(DamageSource source, float amount) {
         if (getHostility() != Hostility.PASSIVE && source.getAttacker() instanceof LivingEntity)
-            this.setRevengeTarget((LivingEntity) source.getAttacker());
+            this.setAttacker((LivingEntity) source.getAttacker());
         return super.damage(source, amount);
     }
 
@@ -98,11 +97,11 @@ public abstract class CenozocraftMonsterBase extends CenozoCraftEntityBase imple
         friends.computeIfAbsent(player.getUuid(), k -> new AtomicInteger()).set(0);
     }
 
-    protected static class AIAttack<T extends LivingEntity> extends EntityAITargetNonTamed<T>{
+    protected static class AIAttack<T extends LivingEntity> extends FollowTargetIfTamedGoal<T> {
         private final CenozocraftMonsterBase entity;
 
-        AIAttack(CenozocraftMonsterBase entity, Class<T> classTarget, Predicate<? super T > targetSelector) {
-            super(entity, classTarget, true, input -> (targetSelector != null && !targetSelector.test(input)) || (entity.getHostility() == Hostility.NEUTRAL && input != entity.getRevengeTarget()) && (!(input instanceof EntityPlayer) || !entity.friends.containsKey(input.getUniqueID())));
+        AIAttack(CenozocraftMonsterBase entity, Class<T> classTarget, Predicate<LivingEntity> targetSelector) {
+            super(entity, classTarget, true, input -> (targetSelector != null && !targetSelector.test(input)) || (entity.getHostility() == Hostility.NEUTRAL && input != entity.getAttacker()) && (!(input instanceof PlayerEntity) || !entity.friends.containsKey(input.getUuid())));
             this.entity = entity;
         }
 
@@ -112,7 +111,7 @@ public abstract class CenozocraftMonsterBase extends CenozoCraftEntityBase imple
 
         @Override
         public boolean canStart() {
-            return entity.getHostility() != Hostility.PASSIVE && (entity.getHostility() != Hostility.NEUTRAL || entity.getRevengeTarget() != null);
+            return entity.getHostility() != Hostility.PASSIVE && (entity.getHostility() != Hostility.NEUTRAL || entity.getAttacker() != null);
         }
     }
 

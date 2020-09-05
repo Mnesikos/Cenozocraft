@@ -36,6 +36,11 @@ public class IrishElkEntity extends CenozocraftMonsterBase implements GenderedAn
     }
 
     @Override
+    public int getVariantCount() {
+        return 2;
+    }
+
+    @Override
     public void writeCustomDataToTag(CompoundTag tag) {
         super.writeCustomDataToTag(tag);
         tag.putBoolean("gender", CenozoCraftGender.getFromGender(this.getGender()));

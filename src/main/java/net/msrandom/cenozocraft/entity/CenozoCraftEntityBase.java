@@ -1,7 +1,5 @@
 package net.msrandom.cenozocraft.entity;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.entity.EntityData;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
@@ -27,33 +25,24 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
-import net.msrandom.cenozocraft.entity.monster.CenozocraftMonsterBase;
 
-import java.io.File;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class CenozoCraftEntityBase extends TameableEntity {
     private static final TrackedData<Byte> STATE = DataTracker.registerData(CenozoCraftEntityBase.class, TrackedDataHandlerRegistry.BYTE);
     private static final TrackedData<Integer> VARIANT = DataTracker.registerData(CenozoCraftEntityBase.class, TrackedDataHandlerRegistry.INTEGER);
-    private final int textureCount;
-    private Set<Item> tameItems = new HashSet<>();
+    private final Set<Item> tameItems = new HashSet<>();
     private int tameDifficulty = 0;
     protected Identifier location;
 
     public CenozoCraftEntityBase(EntityType<? extends CenozoCraftEntityBase> type, World world) {
         super(type, world);
-        if(world.isClient) {
-            Identifier textures = getTextureLocation();
-            this.textureCount = Objects.requireNonNull(new File(getClass().getResource("/assets/" + textures.getNamespace() + "/" + textures.getPath()).getFile()).list()).length;
-        }
-        else this.textureCount = 0;
     }
 
     public Identifier getTextureLocation() {
         if(location == null) {
             Identifier key = Registry.ENTITY_TYPE.getId(getType());
-            location = new Identifier(key.getNamespace(), "textures/entity/" + key.getPath() + "/");
+            location = new Identifier(key.getNamespace(), "textures/entity/" + key.getPath());
         }
         return location;
     }
@@ -89,7 +78,7 @@ public abstract class CenozoCraftEntityBase extends TameableEntity {
     @Override
     public EntityData initialize(ServerWorldAccess serverWorldAccess, LocalDifficulty difficulty, SpawnReason spawnReason, EntityData entityData, CompoundTag entityTag) {
         entityData = super.initialize(serverWorldAccess, difficulty, spawnReason, entityData, entityTag);
-        if(world.isClient && getVariantNumber() > 1) this.setVariant(this.random.nextInt(getVariantNumber()));
+        if (getVariantCount() > 1) setRandomVariant();
         return entityData;
     }
 
@@ -97,6 +86,10 @@ public abstract class CenozoCraftEntityBase extends TameableEntity {
     public void setSitting(boolean sitting) {
         this.setState(EnumState.SITTING);
         super.setSitting(sitting);
+    }
+
+    protected void setRandomVariant() {
+        this.setVariant(this.random.nextInt(getVariantCount()));
     }
 
     private void setVariant(int value){
@@ -107,9 +100,8 @@ public abstract class CenozoCraftEntityBase extends TameableEntity {
         return this.dataTracker.get(VARIANT);
     }
 
-    @Environment(EnvType.CLIENT)
-    public int getVariantNumber(){
-        return textureCount;
+    public int getVariantCount() {
+        return 1;
     }
 
     @Override

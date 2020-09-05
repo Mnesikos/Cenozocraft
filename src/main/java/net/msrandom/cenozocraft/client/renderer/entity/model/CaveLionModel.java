@@ -1,11 +1,11 @@
 package net.msrandom.cenozocraft.client.renderer.entity.model;
 
-import net.minecraft.client.model.ModelBase;
+import com.google.common.collect.ImmutableList;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.entity.model.AnimalModel;
-import net.minecraft.client.render.entity.model.CompositeEntityModel;
-import net.minecraft.entity.Entity;
 import net.msrandom.cenozocraft.entity.monster.CaveLionEntity;
+
+import java.util.Collections;
 
 public class CaveLionModel extends AnimalModel<CaveLionEntity> {
     public ModelPart shoulders;
@@ -48,6 +48,7 @@ public class CaveLionModel extends AnimalModel<CaveLionEntity> {
     public ModelPart rightpaw;
     public ModelPart righttoes;
     public ModelPart bellylower;
+    private final Iterable<ModelPart> parts;
 
     public CaveLionModel() {
         this.textureWidth = 128;
@@ -217,6 +218,7 @@ public class CaveLionModel extends AnimalModel<CaveLionEntity> {
         this.leftthigh.setPivot(0.0F, 8.0F, -3.0F);
         this.leftthigh.addCuboid(-2.0F, 0.0F, 0.0F, 4, 7, 5, 0.0F);
         this.setRotateAngle(leftthigh, 0.5585053606381855F, 0.0F, 0.0F);
+        this.parts = ImmutableList.of(shoulders);
         this.tail1.addChild(this.tail2);
         this.rightforearm2.addChild(this.rightpaw);
         this.neck.addChild(this.head);
@@ -259,8 +261,18 @@ public class CaveLionModel extends AnimalModel<CaveLionEntity> {
     }
 
     @Override
-    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
-        this.shoulders.render(f5);
+    protected Iterable<ModelPart> getBodyParts() {
+        return parts;
+    }
+
+    @Override
+    protected Iterable<ModelPart> getHeadParts() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public void setAngles(CaveLionEntity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
+
     }
 
     public void setRotateAngle(ModelPart modelRenderer, float x, float y, float z) {

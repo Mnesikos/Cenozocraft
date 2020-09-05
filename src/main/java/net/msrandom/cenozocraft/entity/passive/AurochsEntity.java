@@ -9,4 +9,9 @@ public class AurochsEntity extends CenozoCraftGenderedAnimal {
         super(type, world);
         this.addTameItems(Blocks.GRASS_BLOCK.asItem());
     }
+
+    @Override
+    public int getVariantCount() {
+        return 4;
+    }
 }

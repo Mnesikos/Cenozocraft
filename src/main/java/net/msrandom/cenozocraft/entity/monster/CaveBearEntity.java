@@ -35,8 +35,8 @@ public class CaveBearEntity extends CenozocraftMonsterBase {
     }
 
     @Override
-    public int getVariantNumber() {
-        return super.getVariantNumber() / 2;
+    public int getVariantCount() {
+        return 2;
     }
 
     private void setISStanding(boolean standing) {

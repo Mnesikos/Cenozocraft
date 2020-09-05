@@ -16,9 +16,11 @@ public class SmilodonEntity extends CenozocraftMonsterBase {
     }
 
     @Override
-    public Identifier getTextureLocation() {
-        if (location == null) location = new Identifier(CenozoCraft.MOD_ID, "textures/entity/smilodon/");
-        return super.getTextureLocation();
+    protected void setRandomVariant() {}
+
+    @Override
+    public int getVariantCount() {
+        return 3;
     }
 
     @Override

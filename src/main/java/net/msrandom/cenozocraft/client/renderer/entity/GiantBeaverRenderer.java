@@ -5,7 +5,7 @@ import net.msrandom.cenozocraft.client.renderer.entity.model.GiantBeaverModel;
 import net.msrandom.cenozocraft.client.renderer.CenozocraftRenderer;
 import net.msrandom.cenozocraft.entity.passive.GiantBeaverEntity;
 
-public class GiantBeaverRenderer extends CenozocraftRenderer<GiantBeaverEntity> {
+public class GiantBeaverRenderer extends CenozocraftRenderer<GiantBeaverEntity, GiantBeaverModel> {
     public GiantBeaverRenderer(EntityRenderDispatcher rendermanagerIn) {
         super(rendermanagerIn, new GiantBeaverModel(), 0.3f);
     }

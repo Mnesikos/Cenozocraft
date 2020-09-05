@@ -1,18 +1,19 @@
 package net.msrandom.cenozocraft.client.renderer.entity;
 
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
+import net.minecraft.client.util.math.MatrixStack;
 import net.msrandom.cenozocraft.client.renderer.CenozocraftRenderer;
-import net.msrandom.cenozocraft.entity.passive.HouseMouseEntity;
 import net.msrandom.cenozocraft.client.renderer.entity.model.HouseMouseModel;
+import net.msrandom.cenozocraft.entity.passive.HouseMouseEntity;
 
-public class HouseMouseRenderer extends CenozocraftRenderer<HouseMouseEntity> {
-
+public class HouseMouseRenderer extends CenozocraftRenderer<HouseMouseEntity, HouseMouseModel> {
     public HouseMouseRenderer(EntityRenderDispatcher renderManagerIn) {
         super(renderManagerIn, new HouseMouseModel(), 0.01F);
     }
 
-    protected void preRenderCallback(HouseMouseEntity entity, float partialTickTime) {
-        GlStateManager.scale(2.5F, 2.5F, 2.5F);
+    @Override
+    protected void scale(HouseMouseEntity entity, MatrixStack matrices, float amount) {
+        super.scale(entity, matrices, amount);
+        matrices.scale(0.5f, 0.5f, 0.5f);
     }
 }

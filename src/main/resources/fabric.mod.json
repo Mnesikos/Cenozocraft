@@ -19,6 +19,9 @@
   "entrypoints": {
     "main": [
       "net.msrandom.cenozocraft.CenozoCraft"
+    ],
+    "client": [
+      "net.msrandom.cenozocraft.CenozoCraftClient"
     ]
   },
 

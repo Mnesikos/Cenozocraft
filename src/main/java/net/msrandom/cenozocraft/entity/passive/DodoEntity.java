@@ -8,5 +8,10 @@ public class DodoEntity extends CenozoCraftEntityBase {
     public DodoEntity(EntityType<? extends DodoEntity> type, World world) {
         super(type, world);
     }
+
+    @Override
+    public int getVariantCount() {
+        return 5;
+    }
 }
 
