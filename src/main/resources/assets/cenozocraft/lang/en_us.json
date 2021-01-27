@@ -1,0 +1,20 @@
+{
+  "entity.aurochs.name": "Aurochs",
+  "entity.cave_bear.name": "Cave Bear",
+  "entity.cave_lion.name": "Cave Lion",
+  "entity.dire_wolf.name": "Dire Wolf",
+  "entity.dodo.name": "Dodo",
+  "entity.elasmotherium.name": "Elasmotherium",
+  "entity.giant_beaver.name": "Giant Beaver",
+  "entity.smilodon_gracilis.name": "Smilodon Gracilis",
+  "entity.smilodon_fatalis.name": "Smilodon Fatalis",
+  "entity.smilodon_populator.name": "Smilodon Populator",
+  "entity.great_auk.name": "Greak Auk",
+  "entity.house_mouse.name": "St Kilda House Mouse",
+  "entity.irish_elk.name": "Irish Elk",
+  "entity.megatherium.name": "Megatherium",
+  "entity.procoptodon.name": "Procoptodon",
+  "entity.quagga.name": "Quagga",
+  "entity.thylacine.name": "Thylacine",
+  "entity.titanis.name": "Titanis"
+}

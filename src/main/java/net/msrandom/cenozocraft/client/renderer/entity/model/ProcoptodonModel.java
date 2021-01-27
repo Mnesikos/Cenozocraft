@@ -1,25 +1,296 @@
 package net.msrandom.cenozocraft.client.renderer.entity.model;
 
-
 import net.minecraft.client.model.ModelPart;
-import net.minecraft.client.render.entity.model.AnimalModel;
+import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.entity.model.EntityModel;
+import net.minecraft.client.util.math.MatrixStack;
 import net.msrandom.cenozocraft.entity.passive.ProcoptodonEntity;
 
-import java.util.Collections;
+/**
+ * GiantShortFacedKangaroo - Jaz
+ * Created using Tabula 7.0.0
+ */
+public class ProcoptodonModel extends EntityModel<ProcoptodonEntity> {
+    public ModelPart body1;
+    public ModelPart body2;
+    public ModelPart backlegL;
+    public ModelPart backlegR;
+    public ModelPart babyhead;
+    public ModelPart pouch;
+    public ModelPart Tail4;
+    public ModelPart body3;
+    public ModelPart Larm;
+    public ModelPart Rarm;
+    public ModelPart neck1;
+    public ModelPart head;
+    public ModelPart snout;
+    public ModelPart mouth;
+    public ModelPart earL;
+    public ModelPart earR;
+    public ModelPart tophead;
+    public ModelPart nose;
+    public ModelPart noseslope;
+    public ModelPart Larm2;
+    public ModelPart Lhand;
+    public ModelPart Rarm2;
+    public ModelPart Rhand;
+    public ModelPart backleg2L;
+    public ModelPart Lfoot;
+    public ModelPart toe1;
+    public ModelPart toe2;
+    public ModelPart toe3;
+    public ModelPart backleg2R;
+    public ModelPart Rfoot;
+    public ModelPart toe1_1;
+    public ModelPart toe2_1;
+    public ModelPart toe3_1;
+    public ModelPart babyearR;
+    public ModelPart babyearL;
+    public ModelPart babysnout;
+    public ModelPart babymouth;
+    public ModelPart babyarmR;
+    public ModelPart babyarmL;
+    public ModelPart Tail;
+    public ModelPart Tail_1;
+    public ModelPart Tail_2;
 
-public class ProcoptodonModel extends AnimalModel<ProcoptodonEntity> {
-    @Override
-    protected Iterable<ModelPart> getHeadParts() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    protected Iterable<ModelPart> getBodyParts() {
-        return Collections.emptyList();
+    public ProcoptodonModel() {
+        this.textureWidth = 80;
+        this.textureHeight = 80;
+        this.backleg2L = new ModelPart(this, 0, 71);
+        this.backleg2L.setPivot(1.5F, 2.0F, -0.4F);
+        this.backleg2L.addCuboid(-1.5F, 0.0F, -1.5F, 3, 6, 3, 0.0F);
+        this.setRotateAngle(backleg2L, 0.36425021489121656F, 0.0F, 0.0F);
+        this.backleg2R = new ModelPart(this, 0, 71);
+        this.backleg2R.mirror = true;
+        this.backleg2R.setPivot(-1.5F, 2.0F, -0.4F);
+        this.backleg2R.addCuboid(-1.5F, 0.0F, -1.5F, 3, 6, 3, 0.0F);
+        this.setRotateAngle(backleg2R, 0.36425021489121656F, 0.0F, 0.0F);
+        this.Tail_2 = new ModelPart(this, 13, 64);
+        this.Tail_2.setPivot(0.0F, -0.5F, 3.0F);
+        this.Tail_2.addCuboid(-1.0F, -3.0F, 0.0F, 2, 3, 4, 0.0F);
+        this.setRotateAngle(Tail_2, 0.2617993877991494F, 0.0F, 0.0F);
+        this.babysnout = new ModelPart(this, 0, 30);
+        this.babysnout.setPivot(0.0F, -0.2F, -2.0F);
+        this.babysnout.addCuboid(-1.0F, -0.5F, -2.0F, 2, 1, 2, 0.0F);
+        this.setRotateAngle(babysnout, 0.15707963267948966F, 0.0F, 0.0F);
+        this.Tail4 = new ModelPart(this, 32, 26);
+        this.Tail4.setPivot(0.0F, 1.5F, 9.0F);
+        this.Tail4.addCuboid(-3.0F, -6.0F, -1.0F, 6, 6, 6, 0.0F);
+        this.setRotateAngle(Tail4, 0.2017600615305445F, 0.0F, 0.0F);
+        this.babyearR = new ModelPart(this, 0, 0);
+        this.babyearR.setPivot(-1.0F, -1.0F, -2.0F);
+        this.babyearR.addCuboid(-0.5F, -2.0F, 0.0F, 1, 2, 0, 0.0F);
+        this.setRotateAngle(babyearR, 0.27314402793711257F, 0.31869712141416456F, -0.31869712141416456F);
+        this.earL = new ModelPart(this, 0, 4);
+        this.earL.setPivot(2.7F, -1.5F, -2.0F);
+        this.earL.addCuboid(-1.0F, -3.0F, 0.0F, 2, 3, 1, 0.0F);
+        this.setRotateAngle(earL, -0.045553093477052F, -0.4553564018453205F, 0.40980330836826856F);
+        this.babyearL = new ModelPart(this, 0, 0);
+        this.babyearL.setPivot(1.0F, -1.0F, -2.0F);
+        this.babyearL.addCuboid(-0.5F, -2.0F, 0.0F, 1, 2, 0, 0.0F);
+        this.setRotateAngle(babyearL, 0.27314402793711257F, -0.31869712141416456F, 0.31869712141416456F);
+        this.toe1_1 = new ModelPart(this, 17, 57);
+        this.toe1_1.setPivot(0.0F, 0.5F, -5.0F);
+        this.toe1_1.addCuboid(-0.5F, -0.5F, -3.0F, 1, 1, 3, 0.0F);
+        this.setRotateAngle(toe1_1, 0.06981317007977318F, 0.0F, 0.0F);
+        this.Larm = new ModelPart(this, 22, 33);
+        this.Larm.setPivot(2.0F, 0.0F, -6.8F);
+        this.Larm.addCuboid(0.0F, 0.0F, -1.5F, 2, 6, 3, 0.0F);
+        this.setRotateAngle(Larm, 0.8157668923821496F, 0.0F, -0.136659280431156F);
+        this.Tail = new ModelPart(this, 12, 71);
+        this.Tail.setPivot(0.0F, -0.5F, 5.0F);
+        this.Tail.addCuboid(-2.0F, -5.0F, -1.0F, 4, 5, 4, 0.0F);
+        this.setRotateAngle(Tail, 0.2617993877991494F, 0.0F, 0.0F);
+        this.body1 = new ModelPart(this, 0, 0);
+        this.body1.setPivot(0.0F, 7.2F, 0.0F);
+        this.body1.addCuboid(-4.5F, -4.5F, 0.0F, 9, 9, 9, 0.0F);
+        this.setRotateAngle(body1, -0.9599310885968813F, 0.0F, 0.0F);
+        this.Lhand = new ModelPart(this, 11, 18);
+        this.Lhand.setPivot(0.0F, 4.9F, -0.5F);
+        this.Lhand.addCuboid(-1.0F, 0.0F, -1.0F, 2, 3, 2, 0.0F);
+        this.setRotateAngle(Lhand, 0.554665636283798F, 0.0F, 0.0F);
+        this.Lfoot = new ModelPart(this, 20, 56);
+        this.Lfoot.setPivot(0.0F, 5.0F, 1.0F);
+        this.Lfoot.addCuboid(-1.5F, 0.0F, -6.0F, 3, 1, 6, 0.0F);
+        this.toe2 = new ModelPart(this, 0, 0);
+        this.toe2.setPivot(-1.0F, 0.5F, -5.0F);
+        this.toe2.addCuboid(-0.5F, -0.5F, -2.0F, 1, 1, 2, 0.0F);
+        this.setRotateAngle(toe2, 0.08726646259971647F, 0.0F, 0.0F);
+        this.noseslope = new ModelPart(this, 50, 26);
+        this.noseslope.setPivot(0.0F, -0.5F, -2.4F);
+        this.noseslope.addCuboid(-1.5F, -1.0F, 0.0F, 3, 1, 3, 0.0F);
+        this.setRotateAngle(noseslope, 0.3665191429188092F, 0.0F, 0.0F);
+        this.babymouth = new ModelPart(this, 32, 29);
+        this.babymouth.setPivot(0.0F, 0.7F, -1.7F);
+        this.babymouth.addCuboid(-0.5F, -0.5F, -2.0F, 1, 1, 2, 0.0F);
+        this.setRotateAngle(babymouth, -0.12217304763960307F, 0.0F, 0.0F);
+        this.Rarm2 = new ModelPart(this, 26, 48);
+        this.Rarm2.mirror = true;
+        this.Rarm2.setPivot(-1.0F, 4.6F, 0.6F);
+        this.Rarm2.addCuboid(-1.0F, 0.0F, -1.0F, 2, 6, 2, 0.0F);
+        this.setRotateAngle(Rarm2, -0.5775294494849237F, -0.136659280431156F, 0.0F);
+        this.toe3 = new ModelPart(this, 0, 0);
+        this.toe3.setPivot(1.0F, 0.5F, -5.0F);
+        this.toe3.addCuboid(-0.5F, -0.5F, -2.0F, 1, 1, 2, 0.0F);
+        this.setRotateAngle(toe3, 0.08726646259971647F, 0.0F, 0.0F);
+        this.Tail_1 = new ModelPart(this, 0, 64);
+        this.Tail_1.setPivot(0.0F, -0.5F, 3.0F);
+        this.Tail_1.addCuboid(-1.5F, -4.0F, 0.0F, 3, 4, 3, 0.0F);
+        this.setRotateAngle(Tail_1, 0.2617993877991494F, 0.0F, 0.0F);
+        this.toe3_1 = new ModelPart(this, 0, 0);
+        this.toe3_1.setPivot(1.0F, 0.5F, -5.0F);
+        this.toe3_1.addCuboid(-0.5F, -0.5F, -2.0F, 1, 1, 2, 0.0F);
+        this.setRotateAngle(toe3_1, 0.08726646259971647F, 0.0F, 0.0F);
+        this.Rfoot = new ModelPart(this, 20, 56);
+        this.Rfoot.setPivot(0.0F, 5.0F, 1.0F);
+        this.Rfoot.addCuboid(-1.5F, 0.0F, -6.0F, 3, 1, 6, 0.0F);
+        this.Larm2 = new ModelPart(this, 26, 48);
+        this.Larm2.setPivot(1.0F, 4.6F, 0.6F);
+        this.Larm2.addCuboid(-1.0F, 0.0F, -1.0F, 2, 6, 2, 0.0F);
+        this.setRotateAngle(Larm2, -0.5775294494849237F, 0.136659280431156F, 0.0F);
+        this.Rhand = new ModelPart(this, 11, 18);
+        this.Rhand.mirror = true;
+        this.Rhand.setPivot(0.0F, 4.9F, -0.5F);
+        this.Rhand.addCuboid(-1.0F, 0.0F, -1.0F, 2, 3, 2, 0.0F);
+        this.setRotateAngle(Rhand, 0.554665636283798F, 0.0F, 0.0F);
+        this.Rarm = new ModelPart(this, 22, 33);
+        this.Rarm.mirror = true;
+        this.Rarm.setPivot(-2.0F, 0.0F, -6.8F);
+        this.Rarm.addCuboid(-2.0F, 0.0F, -1.5F, 2, 6, 3, 0.0F);
+        this.setRotateAngle(Rarm, 0.8157668923821496F, 0.0F, 0.136659280431156F);
+        this.neck1 = new ModelPart(this, 28, 38);
+        this.neck1.setPivot(0.0F, 0.4F, -2.7F);
+        this.neck1.addCuboid(-2.5F, -3.0F, -4.0F, 5, 6, 4, 0.0F);
+        this.setRotateAngle(neck1, -0.3710569989739945F, 0.0F, 0.0F);
+        this.head = new ModelPart(this, 0, 44);
+        this.head.setPivot(0.0F, -3.0F, -4.5F);
+        this.head.addCuboid(-3.0F, -3.0F, -7.0F, 6, 6, 7, 0.0F);
+        this.setRotateAngle(head, 1.3894566175126857F, 0.0F, 0.0F);
+        this.pouch = new ModelPart(this, 39, 0);
+        this.pouch.setPivot(0.0F, 2.6F, 4.0F);
+        this.pouch.addCuboid(-4.0F, -3.0F, -2.0F, 8, 3, 2, 0.0F);
+        this.setRotateAngle(pouch, 1.7938494051997718F, 0.0F, 0.0F);
+        this.backlegL = new ModelPart(this, 0, 18);
+        this.backlegL.setPivot(2.51F, 1.6F, 6.6F);
+        this.backlegL.addCuboid(0.0F, -3.5F, -2.5F, 3, 7, 5, 0.0F);
+        this.setRotateAngle(backlegL, 0.6009168614616476F, 0.0F, 0.0F);
+        this.babyhead = new ModelPart(this, 27, 0);
+        this.babyhead.setPivot(0.0F, 4.0F, 1.5F);
+        this.babyhead.addCuboid(-1.5F, -1.5F, -3.0F, 3, 3, 3, 0.0F);
+        this.setRotateAngle(babyhead, 1.1587240903990355F, 0.0F, 0.0F);
+        this.nose = new ModelPart(this, 45, 5);
+        this.nose.setPivot(0.0F, -0.8F, -2.1F);
+        this.nose.addCuboid(-1.0F, -0.5F, -1.0F, 2, 2, 1, 0.0F);
+        this.setRotateAngle(nose, -0.18587756533739608F, 0.0F, 0.0F);
+        this.tophead = new ModelPart(this, 40, 44);
+        this.tophead.setPivot(0.0F, -1.5F, -0.5F);
+        this.tophead.addCuboid(-2.5F, -2.0F, -6.0F, 5, 2, 6, 0.0F);
+        this.snout = new ModelPart(this, 46, 38);
+        this.snout.setPivot(0.0F, -0.2F, -6.0F);
+        this.snout.addCuboid(-2.0F, -1.5F, -3.0F, 4, 3, 3, 0.0F);
+        this.setRotateAngle(snout, 0.136659280431156F, 0.0F, 0.0F);
+        this.earR = new ModelPart(this, 0, 4);
+        this.earR.mirror = true;
+        this.earR.setPivot(-2.7F, -1.5F, -2.0F);
+        this.earR.addCuboid(-1.0F, -3.0F, 0.0F, 2, 3, 1, 0.0F);
+        this.setRotateAngle(earR, 0.045553093477052F, 0.4553564018453205F, -0.40980330836826856F);
+        this.mouth = new ModelPart(this, 36, 5);
+        this.mouth.setPivot(0.0F, 1.2F, -5.6F);
+        this.mouth.addCuboid(-1.5F, -1.0F, -3.0F, 3, 2, 3, 0.0F);
+        this.backlegR = new ModelPart(this, 0, 18);
+        this.backlegR.mirror = true;
+        this.backlegR.setPivot(-2.5F, 1.6F, 6.6F);
+        this.backlegR.addCuboid(-3.0F, -3.5F, -2.5F, 3, 7, 5, 0.0F);
+        this.setRotateAngle(backlegR, 0.6009168614616476F, 0.0F, 0.0F);
+        this.babyarmL = new ModelPart(this, 51, 5);
+        this.babyarmL.setPivot(1.6F, -2.6F, -0.6F);
+        this.babyarmL.addCuboid(-0.5F, 0.0F, -1.0F, 1, 2, 1, 0.0F);
+        this.setRotateAngle(babyarmL, -1.2292353921796064F, -0.36425021489121656F, 0.045553093477052F);
+        this.toe2_1 = new ModelPart(this, 0, 0);
+        this.toe2_1.setPivot(-1.0F, 0.5F, -5.0F);
+        this.toe2_1.addCuboid(-0.5F, -0.5F, -2.0F, 1, 1, 2, 0.0F);
+        this.setRotateAngle(toe2_1, 0.08726646259971647F, 0.0F, 0.0F);
+        this.babyarmR = new ModelPart(this, 59, 2);
+        this.babyarmR.setPivot(-1.6F, -2.6F, -0.6F);
+        this.babyarmR.addCuboid(-0.5F, 0.0F, -1.0F, 1, 2, 1, 0.0F);
+        this.setRotateAngle(babyarmR, -1.2292353921796064F, 0.36425021489121656F, 0.045553093477052F);
+        this.body3 = new ModelPart(this, 0, 33);
+        this.body3.setPivot(0.0F, 0.5F, -4.5F);
+        this.body3.addCuboid(-3.5F, -3.5F, -4.0F, 7, 7, 4, 0.0F);
+        this.setRotateAngle(body3, -0.3490658503988659F, 0.0F, 0.0F);
+        this.body2 = new ModelPart(this, 28, 10);
+        this.body2.setPivot(0.0F, 0.0F, 0.0F);
+        this.body2.addCuboid(-4.0F, -4.0F, -6.0F, 8, 8, 8, 0.0F);
+        this.setRotateAngle(body2, 0.3839724354387525F, 0.0F, 0.0F);
+        this.toe1 = new ModelPart(this, 17, 57);
+        this.toe1.setPivot(0.0F, 0.5F, -5.0F);
+        this.toe1.addCuboid(-0.5F, -0.5F, -3.0F, 1, 1, 3, 0.0F);
+        this.setRotateAngle(toe1, 0.06981317007977318F, 0.0F, 0.0F);
+        this.backlegL.addChild(this.backleg2L);
+        this.backlegR.addChild(this.backleg2R);
+        this.Tail_1.addChild(this.Tail_2);
+        this.babyhead.addChild(this.babysnout);
+        this.body1.addChild(this.Tail4);
+        this.babyhead.addChild(this.babyearR);
+        this.head.addChild(this.earL);
+        this.babyhead.addChild(this.babyearL);
+        this.Rfoot.addChild(this.toe1_1);
+        this.body2.addChild(this.Larm);
+        this.Tail4.addChild(this.Tail);
+        this.Larm2.addChild(this.Lhand);
+        this.backleg2L.addChild(this.Lfoot);
+        this.Lfoot.addChild(this.toe2);
+        this.snout.addChild(this.noseslope);
+        this.babyhead.addChild(this.babymouth);
+        this.Rarm.addChild(this.Rarm2);
+        this.Lfoot.addChild(this.toe3);
+        this.Tail.addChild(this.Tail_1);
+        this.Rfoot.addChild(this.toe3_1);
+        this.backleg2R.addChild(this.Rfoot);
+        this.Larm.addChild(this.Larm2);
+        this.Rarm2.addChild(this.Rhand);
+        this.body2.addChild(this.Rarm);
+        this.body3.addChild(this.neck1);
+        this.neck1.addChild(this.head);
+        this.body1.addChild(this.pouch);
+        this.body1.addChild(this.backlegL);
+        this.body1.addChild(this.babyhead);
+        this.snout.addChild(this.nose);
+        this.head.addChild(this.tophead);
+        this.head.addChild(this.snout);
+        this.head.addChild(this.earR);
+        this.head.addChild(this.mouth);
+        this.body1.addChild(this.backlegR);
+        this.pouch.addChild(this.babyarmL);
+        this.Rfoot.addChild(this.toe2_1);
+        this.pouch.addChild(this.babyarmR);
+        this.body2.addChild(this.body3);
+        this.body1.addChild(this.body2);
+        this.Lfoot.addChild(this.toe1);
     }
 
     @Override
     public void setAngles(ProcoptodonEntity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
 
+    }
+
+    @Override
+    public void render(MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float alpha) {
+        double f5 = 3.0d;
+        matrices.push();
+        matrices.translate(this.body1.pivotX, this.body1.pivotY, this.body1.pivotZ);
+        matrices.translate(this.body1.pitch * f5, this.body1.yaw * f5, this.body1.roll * f5);
+        matrices.scale(1.2f, 1.2f, 1.2f);
+        matrices.translate(-this.body1.pivotX, -this.body1.pivotY, -this.body1.pivotZ);
+        matrices.translate(-this.body1.pitch * f5, -this.body1.yaw * f5, -this.body1.roll * f5);
+        this.body1.render(matrices, vertices, light, overlay, red, green, blue, alpha);
+        matrices.pop();
+    }
+
+    public void setRotateAngle(ModelPart modelRenderer, float x, float y, float z) {
+        modelRenderer.pitch = x;
+        modelRenderer.yaw = y;
+        modelRenderer.roll = z;
     }
 }

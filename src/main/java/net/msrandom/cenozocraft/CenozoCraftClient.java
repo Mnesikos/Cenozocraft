@@ -14,13 +14,13 @@ import java.util.function.Function;
 public class CenozoCraftClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
-        registerRenderer(CenozoCraftEntities.POPULATOR_SMILODON, SmilodonRenderer::new);
-        registerRenderer(CenozoCraftEntities.FATALIS_SMILODON, SmilodonRenderer::new);
-        registerRenderer(CenozoCraftEntities.GRACILIS_SMILODON, SmilodonRenderer::new);
+        registerRenderer(CenozoCraftEntities.SMILODON_POPULATOR, SmilodonRenderer::new);
+        registerRenderer(CenozoCraftEntities.SMILODON_FATALIS, SmilodonRenderer::new);
+        registerRenderer(CenozoCraftEntities.SMILODON_GRACILIS, SmilodonRenderer::new);
         registerRenderer(CenozoCraftEntities.AUROCHS, AurochsRenderer::new);
-        registerRenderer(CenozoCraftEntities.CAVEBEAR, CaveBearRenderer::new);
-        registerRenderer(CenozoCraftEntities.CAVELION, CaveLionRenderer::new);
-        registerRenderer(CenozoCraftEntities.DIREWOLF, DireWolfRenderer::new);
+        registerRenderer(CenozoCraftEntities.CAVE_BEAR, CaveBearRenderer::new);
+        registerRenderer(CenozoCraftEntities.CAVE_LION, CaveLionRenderer::new);
+        registerRenderer(CenozoCraftEntities.DIRE_WOLF, DireWolfRenderer::new);
         registerRenderer(CenozoCraftEntities.DODO, DodoRenderer::new);
         registerRenderer(CenozoCraftEntities.ELASMOTHERIUM, ElasmotheriumRenderer::new);
         registerRenderer(CenozoCraftEntities.GIANT_BEAVER, GiantBeaverRenderer::new);

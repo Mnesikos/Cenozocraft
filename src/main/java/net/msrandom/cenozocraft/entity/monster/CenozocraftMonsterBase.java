@@ -48,8 +48,8 @@ public abstract class CenozocraftMonsterBase extends CenozoCraftEntityBase imple
     @Override
     protected void applyEntityAI() {
         super.applyEntityAI();
-        this.targetSelector.add(0, new AIAttack<>(this, PlayerEntity.class));
-        this.targetSelector.add(0, new AIAttack<>(this, CenozoCraftEntityBase.class, input -> !(input instanceof CenozocraftMonsterBase)));
+        this.targetSelector.add(0, new AttackGoal<>(this, PlayerEntity.class));
+        this.targetSelector.add(0, new AttackGoal<>(this, CenozoCraftEntityBase.class, input -> !(input instanceof CenozocraftMonsterBase)));
     }
 
     @Override
@@ -61,10 +61,10 @@ public abstract class CenozocraftMonsterBase extends CenozoCraftEntityBase imple
 
     @Override
     protected void mobTick() {
-        for (Map.Entry<UUID, AtomicInteger> set : friends.entrySet()) {
+        /*for (Map.Entry<UUID, AtomicInteger> set : friends.entrySet()) {
             if (set.getValue().get() > 1000) friends.remove(set.getKey());
             else set.getValue().incrementAndGet();
-        }
+        }*/
         super.mobTick();
     }
 
@@ -94,18 +94,18 @@ public abstract class CenozocraftMonsterBase extends CenozoCraftEntityBase imple
 
     @Override
     protected void onHealed(PlayerEntity player) {
-        friends.computeIfAbsent(player.getUuid(), k -> new AtomicInteger()).set(0);
+        //friends.computeIfAbsent(player.getUuid(), k -> new AtomicInteger()).set(0);
     }
 
-    protected static class AIAttack<T extends LivingEntity> extends FollowTargetIfTamedGoal<T> {
+    protected static class AttackGoal<T extends LivingEntity> extends FollowTargetIfTamedGoal<T> {
         private final CenozocraftMonsterBase entity;
 
-        AIAttack(CenozocraftMonsterBase entity, Class<T> classTarget, Predicate<LivingEntity> targetSelector) {
+        AttackGoal(CenozocraftMonsterBase entity, Class<T> classTarget, Predicate<LivingEntity> targetSelector) {
             super(entity, classTarget, true, input -> (targetSelector != null && !targetSelector.test(input)) || (entity.getHostility() == Hostility.NEUTRAL && input != entity.getAttacker()) && (!(input instanceof PlayerEntity) || !entity.friends.containsKey(input.getUuid())));
             this.entity = entity;
         }
 
-        AIAttack(CenozocraftMonsterBase entity, Class<T> target) {
+        AttackGoal(CenozocraftMonsterBase entity, Class<T> target) {
             this(entity, target, null);
         }
 

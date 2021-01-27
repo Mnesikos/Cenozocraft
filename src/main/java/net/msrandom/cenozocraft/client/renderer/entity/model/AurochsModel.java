@@ -71,7 +71,7 @@ public abstract class AurochsModel extends EntityModel<AurochsEntity> {
             this.Head2.addCuboid(-2.0F, 1.33F, -5.5F, 5, 4, 6, 0.0F);
             this.setRotateAngle(Head2, 0.24434609527920614F, 0.0F, 0.0F);
             this.Neck = new ModelPart(this, 30, 30);
-            this.Neck.setPivot(-1.0F, -5.899999999999997F, -17.0F);
+            this.Neck.setPivot(-1.0F, -5.899999999999997F, -7.1F);
             this.Neck.addCuboid(-3.0F, -6.0F, -10.2F, 8, 6, 6, 0.0F);
             this.setRotateAngle(Neck, 0.21642082724729686F, 0.0F, 0.0F);
             this.Horns_2 = new ModelPart(this, 68, 20);
@@ -163,7 +163,7 @@ public abstract class AurochsModel extends EntityModel<AurochsEntity> {
             this.Horns.addCuboid(-3.0F, 0.0F, 0.0F, 7, 2, 2, 0.0F);
             this.setRotateAngle(Horns, 0.22689280275926282F, 0.0F, 0.0F);
             this.Body2 = new ModelPart(this, 11, 85);
-            this.Body2.setPivot(-5.6F, -9.499999999999993F, -15.9F);
+            this.Body2.setPivot(-5.6F, -9.499999999999993F, -6.0F);
             this.Body2.addCuboid(-0.4F, 0.4F, 0.0F, 11, 10, 17, 0.0F);
             this.Tail1 = new ModelPart(this, 0, 68);
             this.Tail1.setPivot(5.0F, 1.8F, 4.6F);
@@ -316,7 +316,7 @@ public abstract class AurochsModel extends EntityModel<AurochsEntity> {
             this.BackRightLeg_1.addCuboid(-1.5F, 0.0F, -2.0F, 3, 11, 3, 0.0F);
             this.setRotateAngle(BackRightLeg_1, -0.13962634015954636F, -0.0F, 0.0F);
             this.Neck = new ModelPart(this, 28, 28);
-            this.Neck.setPivot(-1.0F, 1.0000000000000007F, -17.0F);
+            this.Neck.setPivot(-1.0F, 1.0000000000000007F, -7.1F);
             this.Neck.addCuboid(-3.0F, -6.0F, -12.2F, 8, 6, 8, 0.0F);
             this.setRotateAngle(Neck, 0.21642082724729686F, 0.0F, 0.0F);
             this.Horns = new ModelPart(this, 96, 0);
@@ -324,7 +324,7 @@ public abstract class AurochsModel extends EntityModel<AurochsEntity> {
             this.Horns.addCuboid(-3.0F, 0.0F, 0.0F, 7, 2, 2, 0.0F);
             this.setRotateAngle(Horns, 0.22689280275926282F, 0.0F, 0.0F);
             this.Body2 = new ModelPart(this, 11, 85);
-            this.Body2.setPivot(-5.6F, -4.400000000000007F, -15.899999999999993F);
+            this.Body2.setPivot(-5.6F, -4.400000000000007F, -6.0F);
             this.Body2.addCuboid(-0.4F, 0.4F, 0.0F, 11, 10, 17, 0.0F);
             this.shape54_1 = new ModelPart(this, 0, 15);
             this.shape54_1.setPivot(1.0F, 2.0F, 2.1F);
